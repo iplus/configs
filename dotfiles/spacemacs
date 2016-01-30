@@ -166,7 +166,7 @@ values."
    ;; Emacs commands (M-x).
    ;; By default the command key is `:' so ex-commands are executed like in Vim
    ;; with `:' and Emacs commands are executed with `<leader> :'.
-   dotspacemacs-command-key ";"
+   dotspacemacs-command-key ":"
    ;; If non nil `Y' is remapped to `y$'. (default t)
    dotspacemacs-remap-Y-to-y$ t
    ;; Name of the default layout (default "Default")
@@ -276,19 +276,22 @@ in `dotspacemacs/user-config'."
   (custom-set-variables
    '(eclim-eclipse-dirs '("/opt/eclipse"))
    '(eclim-executable "/opt/eclipse/eclim"))
-  ;; Whitespace mode
-  whitespace-style '(face tabs tab-mark newline-mark)
-  whitespace-display-mappings
-  '((newline-mark 10 [172 10])
-    (tab-mark 9 [9655 9]))
-  ;; Flycheck
-  flycheck-check-syntax-automatically '(save mode-enabled)
 
-  ;; Avy
-  avy-all-windows 'all-frames
+  (setq-default
+   ;; Whitespace mode
+   whitespace-style '(face tabs tab-mark newline-mark)
+   whitespace-display-mappings
+   '((newline-mark 10 [172 10])
+     (tab-mark 9 [9655 9]))
 
-  ;; Ranger
-  ranger-override-dired t
+   ;; Flycheck
+   flycheck-check-syntax-automatically '(save mode-enabled)
+
+   ;; Avy
+   avy-all-windows 'all-frames
+
+   ;; Ranger
+   ranger-override-dired t)
   )
 
 (defun dotspacemacs/user-config ()
@@ -312,6 +315,22 @@ layers configuration. You are free to put any user code."
   ;; (evil-define-key 'insert (kbd "C-c") 'evil-normal-state)
   ;; (define-key evil-insert-state-map (kbd "k") 'evil-previous-visual-line)
   (evil-leader/set-key "," 'save-buffer)
+
+  ;; Semantic fucks up scrolling
+  (with-eval-after-load 'semantic
+    (setq semantic-submode-list (delq 'global-semantic-stickyfunc-mode semantic-submode-list)))
+
+  ;; Additional packages
+  (use-package helm-flycheck
+    :defer t
+    :init
+    (spacemacs/set-leader-keys "eh" 'helm-flycheck))
+  (use-package helm-fuzzier
+    :defer t
+    :commands helm-fuzzier-mode
+    :init
+    (with-eval-after-load 'helm
+      (helm-fuzzier-mode 1)))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
