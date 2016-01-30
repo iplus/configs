@@ -290,6 +290,8 @@ in `dotspacemacs/user-config'."
    ;; Avy
    avy-all-windows 'all-frames
 
+   global-auto-highlight-symbol-mode t
+
    ;; Ranger
    ranger-override-dired t)
   )
@@ -331,6 +333,8 @@ layers configuration. You are free to put any user code."
     :init
     (with-eval-after-load 'helm
       (helm-fuzzier-mode 1)))
+  (golden-ratio-mode 1)
+  (centered-cursor-mode 1)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
