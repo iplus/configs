@@ -55,8 +55,8 @@ values."
      ibuffer
      ranger
      semantic
+     evil-snipe
      (syntax-checking :variables syntax-checking-enable-by-default nil)
-     (version-control :variables version-control-diff-tool 'diff-hl)
 
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -69,7 +69,7 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(helm-flycheck
-                                      (helm-fuzzier :location (recipe :fetcher github
+                                     (helm-fuzzier :location (recipe :fetcher github
                                                                       :repo "EphramPerdition/helm-fuzzier")))
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -189,10 +189,10 @@ values."
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
    dotspacemacs-use-ido nil
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
-   dotspacemacs-helm-resize t
+   dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
-   dotspacemacs-helm-no-header t
+   dotspacemacs-helm-no-header nil
    ;; define the position to display `helm', options are `bottom', `top',
    ;; `left', or `right'. (default 'bottom)
    dotspacemacs-helm-position 'bottom
@@ -332,9 +332,9 @@ layers configuration. You are free to put any user code."
     :commands helm-fuzzier-mode
     :init
     (with-eval-after-load 'helm
-      (helm-fuzzier-mode 1)))
-  (golden-ratio-mode 1)
-  (centered-cursor-mode 1)
+      (helm-fuzzier-mode t)))
+  (spacemacs/toggle-centered-point-globally-on)
+  (spacemacs/toggle-golden-ratio-on)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
