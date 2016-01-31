@@ -52,7 +52,8 @@ values."
 
      javascript
      php
-     ibuffer
+     (ibuffer :variables ibuffer-group-buffers-by nil)
+     bb-ibuffer
      ranger
      semantic
      evil-snipe
