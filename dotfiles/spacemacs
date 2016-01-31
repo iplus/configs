@@ -55,6 +55,7 @@ values."
      (ibuffer :variables ibuffer-group-buffers-by nil)
      bb-ibuffer
      ranger
+     eyebrowse
      semantic
      evil-snipe
      (syntax-checking :variables syntax-checking-enable-by-default nil)
