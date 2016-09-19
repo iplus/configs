@@ -26,38 +26,53 @@ values."
      ;; better-defaults
 
      (auto-completion :variables
-                      auto-completion-return-key-behavior 'complete
+                      auto-completion-return-key-behavior nil
                       auto-completion-tab-key-behavior 'complete
-                      auto-completion-complete-with-key-sequence nil
+                      auto-completion-complete-with-key-sequence "jk"
                       auto-completion-enable-help-tooltip t
-                      auto-completion-complete-with-key-sequence "C-m"
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip 'table-cell-map-hook
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-use-menu-map t
+                      auto-completion-complete-with-key-sequence "C-SPC"
                       )
-
+     dash
+     smex
+     unimpaired
      ;; languages
-     c-c++
+     ;; c-c++
+     themes-megapack
+     (insert "it works")
      clojure
      emacs-lisp
      java
-     python
-
+     javascript
+     ;; python
+     fasd
      ;; markup
      html
      latex
      markdown
      org
+     (shell :variables shell-default-shell 'eshell)
 
      ;; vcs
      version-control
      git
+     github
 
      javascript
+     react
      php
      (ibuffer :variables ibuffer-group-buffers-by nil)
      bb-ibuffer
      ranger
      eyebrowse
      semantic
+     semantic-php
+     typography
      evil-snipe
+     gtags
      (syntax-checking :variables syntax-checking-enable-by-default nil)
 
      ;; (shell :variables
@@ -95,7 +110,7 @@ values."
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
-   dotspacemacs-elpa-https t
+   dotspacemacs-elpa-https nil
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
@@ -127,21 +142,27 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
+   dotspacemacs-themes '(monokai
+                         sanityinc-solarized-light
+                         spacemacs-light
+                         zenburn
+                         solarized-light
                          tao-yin
                          leuven
                          wombat
-                         solarized-light
                          solarized-dark
-                         spacemacs-dark
-                         spacemacs-light
-                         monokai)
+                         spacemacs-dark)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Ubuntu Mono"
-                               :size 16
+   ;; dotspacemacs-default-font '("Ubuntu Mono"
+   ;;                             :size 16
+   ;;                             :weight normal
+   ;;                             :width normal
+   ;;                             :powerline-scale 1.1)
+   dotspacemacs-default-font '("Source Code Pro"
+                               :size 13
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -200,7 +221,9 @@ values."
    dotspacemacs-helm-position 'bottom
    ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
    ;; several times cycle between the kill ring content. (default nil)
-   dotspacemacs-enable-paste-micro-state t
+   ;; dotspacemacs-enable-paste-micro-state t
+   dotspacemacs-enable-paste-transient-state t
+   enable-symbol-highlight-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
    dotspacemacs-which-key-delay 0.4
@@ -250,7 +273,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -272,9 +295,13 @@ values."
 It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
+  (setq-default
+   whitespace-style '(face tab tab-mark)
+   evil-shift-round nil)
+
   (set-variable 'ycmd-server-command '("python" "/home/abcdw/work/ycmd/ycmd"))
   (setq browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program "firefox-bin")
+        browse-url-generic-program "/Applications/qutebrowser.app/Contents/MacOS/qutebrowser")
   (custom-set-variables
    '(eclim-eclipse-dirs '("/opt/eclipse"))
    '(eclim-executable "/opt/eclipse/eclim"))
@@ -296,6 +323,7 @@ in `dotspacemacs/user-config'."
 
    ;; Ranger
    ranger-override-dired t)
+  ;; (find-file "~/org/todo.org")
   )
 
 (defun dotspacemacs/user-config ()
@@ -315,14 +343,50 @@ layers configuration. You are free to put any user code."
   (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line-text)
   (define-key evil-insert-state-map (kbd "C-h") 'delete-backward-char)
   ;; (define-key evil-insert-state-map (kbd "TAB") 'yas-expand)
-  (set-face-attribute 'region nil :background "#666")
+  ;; (set-face-attribute 'region nil :background "#666")
   ;; (evil-define-key 'insert (kbd "C-c") 'evil-normal-state)
   ;; (define-key evil-insert-state-map (kbd "k") 'evil-previous-visual-line)
-  (evil-leader/set-key "," 'save-buffer)
+  (evil-leader/set-key
+    "," 'save-buffer
+    "os" 'just-one-space)
+
+  (add-hook 'text-mode-hook 'auto-fill-mode)
+  (add-hook 'dired-mode-hook 'deer)
 
   ;; Semantic fucks up scrolling
-  (with-eval-after-load 'semantic
-    (setq semantic-submode-list (delq 'global-semantic-stickyfunc-mode semantic-submode-list)))
+  ;; (with-eval-after-load 'semantic
+  ;;   )
+  (setq semantic-submode-list (delq 'global-semantic-stickyfunc-mode semantic-submode-list))
+
+  ;; ORG-MODE
+  (setq org-agenda-files '("~/org"))
+  (org-agenda nil "a")
+  (eval-after-load 'org
+      (lambda()
+        (require 'ob-emacs-lisp)
+        (require 'ob-latex)
+        (require 'ob-sql)
+        (require 'ob-shell)
+        (require 'ob-sqlite)
+        (require 'ob-org)
+        (require 'ob-css)
+        (setq org-image-actual-width nil)
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         '((ditaa . t)))
+        (setq org-export-babel-evaluate nil)
+        (setq org-startup-indented t)
+        ;; increase imenu depth to include third level headings
+        (setq org-imenu-depth 3)
+        ;; Set sensible mode for editing dot files
+        (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
+        ;; Update images from babel code blocks automatically
+        (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+        (setq org-src-fontify-natively t)
+        (setq org-src-tab-acts-natively t)
+        (setq org-ditaa-jar-path "~//bin/")
+        (setq org-confirm-babel-evaluate nil)))
+
 
   ;; Additional packages
   (use-package helm-flycheck
@@ -335,9 +399,99 @@ layers configuration. You are free to put any user code."
     :init
     (with-eval-after-load 'helm
       (helm-fuzzier-mode t)))
-  (spacemacs/toggle-centered-point-globally-on)
-  (spacemacs/toggle-golden-ratio-on)
+  ;; (spacemacs/toggle-centered-point-globally-on)
+  ;; (spacemacs/toggle-golden-ratio-on)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(compilation-message-face (quote default))
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#839496")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
+ '(custom-safe-themes
+   (quote
+    ("d8f76414f8f2dcb045a37eb155bfaa2e1d17b6573ed43fb1d18b936febc7bbc2" "9cb6358979981949d1ae9da907a5d38fb6cde1776e8956a1db150925f2dad6c1" "f64c9f8b4241b680b186f4620afb9c82fa2a76cf4498a7431f90db59bb1892eb" "5e2dc1360a92bb73dafa11c46ba0f30fa5f49df887a8ede4e3533c3ab6270e08" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "40f6a7af0dfad67c0d4df2a1dd86175436d79fc69ea61614d668a635c2cd94ab" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
+ '(eclim-eclipse-dirs (quote ("/opt/eclipse")))
+ '(eclim-executable "/opt/eclipse/eclim")
+ '(fci-rule-color "#383838" t)
+ '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
+ '(highlight-symbol-colors
+   (--map
+    (solarized-color-blend it "#002b36" 0.25)
+    (quote
+     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
+ '(highlight-symbol-foreground-color "#93a1a1")
+ '(highlight-tail-colors
+   (quote
+    (("#073642" . 0)
+     ("#546E00" . 20)
+     ("#00736F" . 30)
+     ("#00629D" . 50)
+     ("#7B6000" . 60)
+     ("#8B2C02" . 70)
+     ("#93115C" . 85)
+     ("#073642" . 100))))
+ '(hl-bg-colors
+   (quote
+    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
+ '(hl-fg-colors
+   (quote
+    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(magit-diff-use-overlays nil)
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(package-selected-packages
+   (quote
+    (xterm-color smex shell-pop multi-term eshell-prompt-extras esh-help helm-dash dash-at-point magit-gh-pulls github-clone github-browse-file git-link gist gh marshal logito pcache ht ede-php-autoload semantic-php zonokai-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme typo fasd grizzl powerline log4e gntp json-snatcher json-reformat parent-mode request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter flx web-completion-data dash-functional pos-tip inflections edn multiple-cursors paredit s peg eval-sexp-fu highlight spinner pkg-info epl packed auctex async popup bind-key bind-map eclim auto-complete tern js2-mode git-commit hydra evil f smartparens with-editor dash package-build php-mode tao-theme monokai-theme avy yasnippet nhexl-mode persp-mode org-pomodoro org-plus-contrib neotree markdown-toc leuven-theme helm-gtags expand-region evil-mc evil-matchit evil-magit cider clojure-mode anzu iedit company flycheck helm helm-core projectile magit magit-popup which-key zenburn-theme ws-butler window-numbering web-mode web-beautify volatile-highlights vi-tilde-fringe use-package toc-org tagedit stickyfunc-enhance srefactor spacemacs-theme spaceline smooth-scrolling smeargle slim-mode scss-mode sass-mode restart-emacs ranger rainbow-delimiters queue quelpa popwin phpunit phpcbf php-extras php-auto-yasnippets pcre2el paradox page-break-lines orgit org-repo-todo org-present org-bullets open-junk-file move-text mmm-mode markdown-mode magit-gitflow macrostep lorem-ipsum linum-relative less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-fuzzier helm-flycheck helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ gh-md ggtags flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu emmet-mode emacs-eclim elisp-slime-nav drupal-mode diff-hl define-word company-web company-tern company-statistics company-quickhelp company-auctex coffee-mode clj-refactor clean-aindent-mode cider-eval-sexp-fu buffer-move bracketed-paste auto-yasnippet auto-highlight-symbol auto-compile auctex-latexmk alert aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+ '(pos-tip-background-color "#073642")
+ '(pos-tip-foreground-color "#93a1a1")
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
+ '(term-default-bg-color "#002b36")
+ '(term-default-fg-color "#839496")
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-background-mode nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3")
+ '(weechat-color-list
+   (quote
+    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83")))
+ '(xterm-color-names
+   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
+ '(xterm-color-names-bright
+   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
