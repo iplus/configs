@@ -28,7 +28,7 @@ values."
      (auto-completion :variables
                       auto-completion-return-key-behavior nil
                       auto-completion-tab-key-behavior 'complete
-                      auto-completion-complete-with-key-sequence "jk"
+                      ;; auto-completion-complete-with-key-sequence "jk"
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-help-tooltip 'table-cell-map-hook
@@ -36,13 +36,13 @@ values."
                       auto-completion-use-menu-map t
                       auto-completion-complete-with-key-sequence "C-SPC"
                       )
+     eww
      dash
      smex
      unimpaired
      ;; languages
      ;; c-c++
      themes-megapack
-     (insert "it works")
      clojure
      emacs-lisp
      java
@@ -66,20 +66,30 @@ values."
      php
      (ibuffer :variables ibuffer-group-buffers-by nil)
      bb-ibuffer
+     bb-org
+     bb-theming
+     bb-web
+     bb-keys
+     bb-latex
+     ;; w3m
      ranger
      eyebrowse
      semantic
      semantic-php
      typography
-     evil-snipe
+     search-engine
+     no-dots
+     (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
      gtags
-     (syntax-checking :variables syntax-checking-enable-by-default nil)
+     (syntax-checking :variables syntax-checking-enable-by-default t)
+
 
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     ;; spell-checking
-     ;; syntax-checking
+     (spell-checking :variables spell-checking-enable-auto-dictionary t
+                     spell-checking-enable-by-default nil
+                     ispell-program-name "/usr/local/bin/aspell")
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -87,7 +97,11 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(helm-flycheck
                                      (helm-fuzzier :location (recipe :fetcher github
-                                                                      :repo "EphramPerdition/helm-fuzzier")))
+                                                                     :repo "EphramPerdition/helm-fuzzier"))
+                                     helm-flycheck
+                                     defproject
+                                     powerline
+                                     org-projectile)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -104,6 +118,7 @@ values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
+   dotspacemacs-startup-buffer-responsive t
    ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
    ;; environment, otherwise it is strongly recommended to let it set to t.
@@ -112,7 +127,7 @@ values."
    ;; (default t)
    dotspacemacs-elpa-https nil
    ;; Maximum allowed time in seconds to contact an ELPA repository.
-   dotspacemacs-elpa-timeout 5
+   dotspacemacs-elpa-timeout 10
    ;; If non nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. (default t)
    dotspacemacs-check-for-update t
@@ -143,6 +158,7 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(monokai
+                         material
                          sanityinc-solarized-light
                          spacemacs-light
                          zenburn
@@ -190,6 +206,7 @@ values."
    ;; By default the command key is `:' so ex-commands are executed like in Vim
    ;; with `:' and Emacs commands are executed with `<leader> :'.
    dotspacemacs-command-key ":"
+   dotspacemacs-retain-visual-state-on-shift t
    ;; If non nil `Y' is remapped to `y$'. (default t)
    dotspacemacs-remap-Y-to-y$ t
    ;; Name of the default layout (default "Default")
@@ -212,10 +229,11 @@ values."
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
    dotspacemacs-use-ido nil
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
-   dotspacemacs-helm-resize nil
+   dotspacemacs-helm-resize t
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
-   dotspacemacs-helm-no-header nil
+   dotspacemacs-helm-no-header t
+   dotspacemacs-helm-use-fuzzy 'always
    ;; define the position to display `helm', options are `bottom', `top',
    ;; `left', or `right'. (default 'bottom)
    dotspacemacs-helm-position 'bottom
@@ -245,7 +263,7 @@ values."
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -263,10 +281,10 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -288,6 +306,10 @@ values."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'changed
+   dotspacemacs-show-transient-state-title t
+   dotspacemacs-folding-method 'origami
+   dotspacemacs-highlight-delimiters 'all
+   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
    ))
 
 (defun dotspacemacs/user-init ()
@@ -296,15 +318,20 @@ It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
   (setq-default
+   vc-follow-symlinks t
+   ring-bell-function 'ignore
    whitespace-style '(face tab tab-mark)
    evil-shift-round nil)
 
   (set-variable 'ycmd-server-command '("python" "/home/abcdw/work/ycmd/ycmd"))
   (setq browse-url-browser-function 'browse-url-generic
+        engine/browser-function 'browse-url-generic
         browse-url-generic-program "/Applications/qutebrowser.app/Contents/MacOS/qutebrowser")
+  ;; (setq browse-url-browser-function 'eww-browse-url
+  ;;       engine/browser-function 'eww-browse-url)
   (custom-set-variables
-   '(eclim-eclipse-dirs '("/opt/eclipse"))
-   '(eclim-executable "/opt/eclipse/eclim"))
+   '(eclim-eclipse-dirs '("/Applications/Eclipse.app/Contents/Eclipse"))
+   '(eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim"))
 
   (setq-default
    ;; Whitespace mode
@@ -321,6 +348,7 @@ in `dotspacemacs/user-config'."
 
    global-auto-highlight-symbol-mode t
 
+   shell-default-term-shell "/bin/zsh"
    ;; Ranger
    ranger-override-dired t)
   ;; (find-file "~/org/todo.org")
@@ -330,6 +358,7 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  (global-company-mode)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (define-key evil-visual-state-map (kbd "j") 'evil-next-visual-line)
@@ -350,8 +379,33 @@ layers configuration. You are free to put any user code."
     "," 'save-buffer
     "os" 'just-one-space)
 
+  (setq w3m-home-page "http://www.google.com")
+  ;; W3M Home Page
+  (setq w3m-default-display-inline-images t)
+  (setq w3m-default-toggle-inline-images t)
+  ;; W3M default display images
+  (setq w3m-command-arguments '("-cookie" "-F"))
+  (setq w3m-use-cookies t)
+  ;; W3M use cookies
+  ;; (setq browse-url-browser-function 'w3m-browse-url)
+  ;; Browse url function use w3m
+  (setq w3m-view-this-url-new-session-in-background t)
+
   (add-hook 'text-mode-hook 'auto-fill-mode)
   (add-hook 'dired-mode-hook 'deer)
+
+  ;; Spaceline
+  (setq powerline-default-separator 'arrow
+        spaceline-buffer-encoding-abbrev-p nil
+        spaceline-version-control-p nil)
+
+  (add-hook 'prog-mode-hook 'page-break-lines-mode)
+  (add-hook 'prog-mode-hook 'turn-on-evil-mc-mode)
+  (add-hook 'text-mode-hook 'turn-on-evil-mc-mode)
+
+  ;; Disable smartparens highlighting
+  (with-eval-after-load 'smartparens
+    (show-smartparens-global-mode -1))
 
   ;; Semantic fucks up scrolling
   ;; (with-eval-after-load 'semantic
@@ -392,16 +446,23 @@ layers configuration. You are free to put any user code."
   (use-package helm-flycheck
     :defer t
     :init
-    (spacemacs/set-leader-keys "eh" 'helm-flycheck))
+    (spacemacs/set-leader-keys "ee" 'helm-flycheck))
   (use-package helm-fuzzier
     :defer t
     :commands helm-fuzzier-mode
     :init
     (with-eval-after-load 'helm
       (helm-fuzzier-mode t)))
-  ;; (spacemacs/toggle-centered-point-globally-on)
+
+  (use-package defproject
+    :commands defproject)
+
+  (spacemacs/toggle-centered-point-globally-on)
   ;; (spacemacs/toggle-golden-ratio-on)
   )
+
+(when (file-exists-p "~/local.el")
+  (load "~/local.el"))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -452,7 +513,7 @@ layers configuration. You are free to put any user code."
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (xterm-color smex shell-pop multi-term eshell-prompt-extras esh-help helm-dash dash-at-point magit-gh-pulls github-clone github-browse-file git-link gist gh marshal logito pcache ht ede-php-autoload semantic-php zonokai-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme typo fasd grizzl powerline log4e gntp json-snatcher json-reformat parent-mode request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter flx web-completion-data dash-functional pos-tip inflections edn multiple-cursors paredit s peg eval-sexp-fu highlight spinner pkg-info epl packed auctex async popup bind-key bind-map eclim auto-complete tern js2-mode git-commit hydra evil f smartparens with-editor dash package-build php-mode tao-theme monokai-theme avy yasnippet nhexl-mode persp-mode org-pomodoro org-plus-contrib neotree markdown-toc leuven-theme helm-gtags expand-region evil-mc evil-matchit evil-magit cider clojure-mode anzu iedit company flycheck helm helm-core projectile magit magit-popup which-key zenburn-theme ws-butler window-numbering web-mode web-beautify volatile-highlights vi-tilde-fringe use-package toc-org tagedit stickyfunc-enhance srefactor spacemacs-theme spaceline smooth-scrolling smeargle slim-mode scss-mode sass-mode restart-emacs ranger rainbow-delimiters queue quelpa popwin phpunit phpcbf php-extras php-auto-yasnippets pcre2el paradox page-break-lines orgit org-repo-todo org-present org-bullets open-junk-file move-text mmm-mode markdown-mode magit-gitflow macrostep lorem-ipsum linum-relative less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-fuzzier helm-flycheck helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ gh-md ggtags flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu emmet-mode emacs-eclim elisp-slime-nav drupal-mode diff-hl define-word company-web company-tern company-statistics company-quickhelp company-auctex coffee-mode clj-refactor clean-aindent-mode cider-eval-sexp-fu buffer-move bracketed-paste auto-yasnippet auto-highlight-symbol auto-compile auctex-latexmk alert aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (eww-lnum org-projectile defproject helm-w3m w3m engine-mode helm-flyspell auto-dictionary undo-tree xterm-color smex shell-pop multi-term eshell-prompt-extras esh-help helm-dash dash-at-point magit-gh-pulls github-clone github-browse-file git-link gist gh marshal logito pcache ht ede-php-autoload semantic-php zonokai-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme dracula-theme django-theme darktooth-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme typo fasd grizzl powerline log4e gntp json-snatcher json-reformat parent-mode request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter flx web-completion-data dash-functional pos-tip inflections edn multiple-cursors paredit s peg eval-sexp-fu highlight spinner pkg-info epl packed auctex async popup bind-key bind-map eclim auto-complete tern js2-mode git-commit hydra evil f smartparens with-editor dash package-build php-mode tao-theme monokai-theme avy yasnippet nhexl-mode persp-mode org-pomodoro org-plus-contrib neotree markdown-toc leuven-theme helm-gtags expand-region evil-mc evil-matchit evil-magit cider clojure-mode anzu iedit company flycheck helm helm-core projectile magit magit-popup which-key zenburn-theme ws-butler window-numbering web-mode web-beautify volatile-highlights vi-tilde-fringe use-package toc-org tagedit stickyfunc-enhance srefactor spacemacs-theme spaceline smooth-scrolling smeargle slim-mode scss-mode sass-mode restart-emacs ranger rainbow-delimiters queue quelpa popwin phpunit phpcbf php-extras php-auto-yasnippets pcre2el paradox page-break-lines orgit org-repo-todo org-present org-bullets open-junk-file move-text mmm-mode markdown-mode magit-gitflow macrostep lorem-ipsum linum-relative less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-fuzzier helm-flycheck helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ gh-md ggtags flycheck-pos-tip flx-ido fill-column-indicator fancy-battery eyebrowse exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu emmet-mode emacs-eclim elisp-slime-nav drupal-mode diff-hl define-word company-web company-tern company-statistics company-quickhelp company-auctex coffee-mode clj-refactor clean-aindent-mode cider-eval-sexp-fu buffer-move bracketed-paste auto-yasnippet auto-highlight-symbol auto-compile auctex-latexmk alert aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
