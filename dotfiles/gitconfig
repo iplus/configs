@@ -1,0 +1,103 @@
+[user]
+	name = Ivan Plyusnin
+	email = ivan.plyusnin@gmail.com
+
+[color]
+  ui = auto
+  diff   = auto
+  grep   = auto
+  status = auto
+
+[core]
+# pager      = less -+$LESS -FRX
+	pager = less -FXR
+	whitespace = trailing-space,space-before-tab
+	editor = emacsclient -nw -a ''
+
+[alias]
+  # Branches
+  branches = !git for-each-ref --format='%(committerdate) %09 %(authorname) %09 %(refname)' | sort -k5n -k2M -k3n -k4n
+  current-branch = rev-parse --abbrev-ref HEAD
+  b = branch -vv
+  # Show all branches
+  br = branch -av
+  # Delete a branch
+  brdel = branch -D
+
+  # Status
+  in = pull --dry-run
+  out = log --branches --not --remotes
+  # changes = diff --name-status -r
+  check = diff --check
+  # Which files are receiving the most "love"
+  churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count,file"} {print $1 "," $2}'
+  # View the log and diff for a commit (previous if no SHA1 provided)
+  details = log -n1 -p --format=fuller
+  changes = "!f() { git log --pretty=format:'* %s' $1..$2; }; f"
+  # List all tags
+  tags = tag -l
+  st         = status --short --branch
+  s = status --short --branch
+
+  # Commiting
+  undo       = !git reset --soft HEAD^
+  # For when you made that commit a bit too early, amend
+  amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+  cm = commit --message
+  # Unstage changes from the index
+  unstage = reset HEAD --
+
+  # Merge
+	merc = 'merge --no-ff'
+
+  # shorts
+  co = checkout
+
+  # Logging
+  l = "!git log --graph --pretty='tformat:%C(yellow)%h{%C(green)%ar{%C(bold blue)%an{%C(red)%d%C(reset) %s' $* | column -t -s '{' | less -FXRS"
+  # Show commit log using graph notation
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  # View a pretty git log with branch tree
+  g = !git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  # List commits showing changed files
+  ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+  ra = log --graph --abbrev-commit --date=relative -20 --all --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
+  sl = shortlog
+  # See all the commits related to a file
+  filelog = log -u
+  fl = log -u
+  news = log -p HEAD@{1}..HEAD@{0}
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  history    = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+
+  conflicts = !git ls-files --unmerged | cut -f2 | sort -u | xargs grep -El '<<<<<<<|=======|>>>>>>>'
+  conflicted = grep --name-only --full-name '<<<<<<< HEAD'
+  unmerged   = !git ls-files --unmerged | cut -f2 | sort -u
+
+	# Find files
+	find       = !git ls-files | grep -iE
+
+[diff]
+	renames = copies
+  mnemonicprefix = true
+  algorithm = histogram
+  compactionHeuristic = true
+[branch]
+	autosetupmerge = true
+[push]
+  default = simple
+  recurseSubmodules = check
+[rerere]
+	enabled = true
+[merge]
+	stat = true
+[rebase]
+  autosquash = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[pull]
+	rebase = true
