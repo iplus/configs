@@ -44,9 +44,7 @@
                   php-insert-doc-uses-tag nil
                   php-insert-doc-varname-on-var nil
                   php-insert-doc-copyright-name nil
-                  php-insert-doc-copyright-email nil
-                  php-insert-doc-author-name "Andiy Kmit'"
-                  php-insert-doc-author-email "dev@madand.net")))
+                  php-insert-doc-copyright-email nil)))
 
 (defun my-web-dev/init-php-helpers ()
   (use-package php-helpers
