@@ -40,7 +40,7 @@ values."
                       auto-completion-enable-sort-by-usage t
                       auto-completion-use-menu-map t
                       )
-     eww
+     ;; eww
      dash
      ;; org-download
      docker
@@ -52,7 +52,9 @@ values."
      ;; languages
      ;; c-c++
      themes-megapack
-     clojure
+     (clojure :variables
+              clojure-enable-fancify-symbols t)
+     my-clojure
      emacs-lisp
      java
      javascript
@@ -81,7 +83,7 @@ values."
      bb-keys
      bb-latex
      ;; w3m
-     ranger
+     ;; ranger
      ;; eyebrowse
      semantic
      semanticphp
@@ -109,13 +111,13 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-  dotspacemacs-additional-packages '(
-                                     ;; helm-flycheck
-                                     ;; (helm-fuzzier :location (recipe :fetcher github
-                                     ;;                                 :repo "EphramPerdition/helm-fuzzier"))
-                                     defproject
-                                     powerline
-                                     org-projectile)
+   dotspacemacs-additional-packages '(
+                                      ;; helm-flycheck
+                                      ;; (helm-fuzzier :location (recipe :fetcher github
+                                      ;;                                 :repo "EphramPerdition/helm-fuzzier"))
+                                      defproject
+                                      powerline
+                                      org-projectile)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    dotspacemacs-download-packages 'used
@@ -130,6 +132,8 @@ This function is called at the very startup of Spacemacs initialization
 before layers configuration.
 You should not put any user code in there besides modifying the variable
 values."
+  ;; (add-to-list 'configuration-layer--elpa-archives
+  ;;              '("billpiel" . "http://billpiel.com/emacs-packages/") t)
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
@@ -336,7 +340,6 @@ in `dotspacemacs/user-config'."
 
   ;; (spacemacs/toggle-truncate-lines-on)
   (setq exec-path-from-shell-arguments '("-l"))
-
   (setq-default
    vc-follow-symlinks t
    ring-bell-function 'ignore
@@ -373,10 +376,10 @@ in `dotspacemacs/user-config'."
 
    shell-default-term-shell "/bin/zsh"
    ;; Ranger
-   ranger-override-dired t
-   ranger-parent-depth 2
-   ranger-width-parents 0.12
-   ranger-max-parent-width 0.12
+   ;; ranger-override-dired t
+   ;; ranger-parent-depth 2
+   ;; ranger-width-parents 0.12
+   ;; ranger-max-parent-width 0.12
    )
   ;; (find-file "~/org/todo.org")
   )
@@ -385,7 +388,8 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  (global-company-mode)
+  ;; (global-company-mode)
+  (add-to-list 'auto-mode-alist '("\\.volt\\'" . web-mode))
   (global-auto-revert-mode t)
   (setq-default
    ranger-cleanup-eagerly t)
@@ -427,7 +431,7 @@ layers configuration. You are free to put any user code."
   (setq w3m-view-this-url-new-session-in-background t)
 
   (add-hook 'text-mode-hook 'auto-fill-mode)
-  (add-hook 'dired-mode-hook 'deer)
+  ;; (add-hook 'dired-mode-hook 'deer)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
   ;; Spaceline
@@ -438,6 +442,7 @@ layers configuration. You are free to put any user code."
   ;; (add-hook 'prog-mode-hook 'page-break-lines-mode)
   (add-hook 'prog-mode-hook 'turn-on-evil-mc-mode)
   (add-hook 'prog-mode-hook 'spacemacs/toggle-indent-guide-on)
+  (add-hook 'prog-mode-hook 'spacemacs/toggle-fill-column-indicator-on)
 
   ;; Disable smartparens highlight
   (with-eval-after-load 'smartparens
@@ -455,30 +460,30 @@ layers configuration. You are free to put any user code."
   ;; (org-agenda nil "a")
 
   (eval-after-load 'org
-      (lambda()
-        (require 'ob-emacs-lisp)
-        (require 'ob-latex)
-        (require 'ob-sql)
-        (require 'ob-shell)
-        (require 'ob-sqlite)
-        (require 'ob-org)
-        (require 'ob-css)
-        (setq org-image-actual-width nil)
-        (org-babel-do-load-languages
-         'org-babel-load-languages
-         '((ditaa . t)))
-        (setq org-export-babel-evaluate nil)
-        (setq org-startup-indented t)
-        ;; increase imenu depth to include third level headings
-        (setq org-imenu-depth 3)
-        ;; Set sensible mode for editing dot files
-        (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
-        ;; Update images from babel code blocks automatically
-        (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-        (setq org-src-fontify-natively t)
-        (setq org-src-tab-acts-natively t)
-        (setq org-ditaa-jar-path "~//bin/")
-        (setq org-confirm-babel-evaluate nil)))
+    (lambda()
+      (require 'ob-emacs-lisp)
+      (require 'ob-latex)
+      (require 'ob-sql)
+      (require 'ob-shell)
+      (require 'ob-sqlite)
+      (require 'ob-org)
+      (require 'ob-css)
+      (setq org-image-actual-width nil)
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((ditaa . t)))
+      (setq org-export-babel-evaluate nil)
+      (setq org-startup-indented t)
+      ;; increase imenu depth to include third level headings
+      (setq org-imenu-depth 3)
+      ;; Set sensible mode for editing dot files
+      (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
+      ;; Update images from babel code blocks automatically
+      (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+      (setq org-src-fontify-natively t)
+      (setq org-src-tab-acts-natively t)
+      (setq org-ditaa-jar-path "~//bin/")
+      (setq org-confirm-babel-evaluate nil)))
 
 
   ;; Bind avy to s and S in Normal and Visual.
@@ -498,6 +503,8 @@ layers configuration. You are free to put any user code."
   (with-eval-after-load 'magit
     (add-hook 'magit-status-headers-hook 'magit-insert-repo-header t))
 
+
+
   ;; Additional packages
   ;; (use-package helm-flycheck
   ;;   :defer t
@@ -514,7 +521,6 @@ layers configuration. You are free to put any user code."
     :commands defproject)
 
   (spacemacs/toggle-centered-point-globally-on)
-  (spacemacs/toggle-fill-column-indicator-on)
   ;; (spacemacs/toggle-golden-ratio-on)
   )
 
@@ -526,4 +532,51 @@ layers configuration. You are free to put any user code."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(eclim-eclipse-dirs (quote ("/Applications/Eclipse.app/Contents/Eclipse")))
+ '(eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
+ '(eww-search-prefix "https://www.google.com/search?q=")
+ '(package-selected-packages
+   (quote
+    (pcache alert haml-mode sayid lispy zoutline parinfer winum unfill ivy eclim iedit smartparens flycheck company projectile helm-core js2-mode highlight magit-popup helm restclient-helm helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-gtags helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag flyspell-correct-helm ace-jump-helm-line which-key inkpot-theme evil-unimpaired darktooth-theme autothemer cider counsel magit git-commit zonokai-theme zenburn-theme zen-and-art-theme yaml-mode xterm-color ws-butler with-editor window-numbering wgrep web-mode web-beautify volatile-highlights vmd-mode vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme typo twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit swiper sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stickyfunc-enhance srefactor sql-indent spacemacs-theme spaceline spacegray-theme sourcerer-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slim-mode shell-pop seti-theme semantic-php scss-mode sass-mode reverse-theme reveal-in-osx-finder restart-emacs request ranger rainbow-delimiters railscasts-theme queue quelpa purple-haze-theme pug-mode professional-theme popwin planet-theme phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el pbcopy pastels-on-dark-theme paradox osx-trash osx-dictionary origami orgit organic-green-theme org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme ob-restclient ob-http noctilux-theme niflheim-theme nginx-mode neotree naquadah-theme mwim mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow magit-gh-pulls macrostep lush-theme lorem-ipsum livid-mode linum-relative link-hint light-soap-theme less-css-mode launchctl js2-refactor js-doc jbeans-theme jazz-theme ivy-purpose ivy-hydra ir-black-theme info+ indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt heroku-theme hemisu-theme help-fns+ helm-make hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md ggtags gandalf-theme flyspell-correct-ivy flycheck-pos-tip flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator fasd farmhouse-theme fancy-battery eyebrowse expand-region exec-path-from-shell eww-lnum evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu espresso-theme eshell-z eshell-prompt-extras esh-help engine-mode emmet-mode elisp-slime-nav ede-php-autoload dumb-jump drupal-mode dracula-theme dockerfile-mode docker django-theme diff-hl defproject dash-at-point darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme counsel-projectile counsel-dash company-web company-tern company-statistics company-restclient company-quickhelp company-emacs-eclim company-auctex column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode clues-theme clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ac-ispell)))
+ '(safe-local-variable-values
+   (quote
+    ((phpunit-arg . "--bootstrap tests/bootstrap.php")
+     (phpunit-configuration-file . "tests/phpunit_full_without_api.xml")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(font-latex-sectioning-0-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-1-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-2-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-3-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-4-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-5-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-slide-title-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(info-title-1 ((t (:inherit default :height 1.0 :weight bold))))
+ '(info-title-2 ((t (:inherit default :height 1.0 :weight bold))))
+ '(info-title-3 ((t (:inherit default :height 1.0 :weight bold))))
+ '(info-title-4 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-1 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-2 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-3 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-4 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-5 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-6 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-document-title ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-1 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-2 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-3 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-4 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-5 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-6 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-7 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-8 ((t (:inherit default :height 1.0 :weight bold)))))
 )
