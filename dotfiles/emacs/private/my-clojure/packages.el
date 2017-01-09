@@ -1,9 +1,9 @@
 (defconst my-clojure-packages
   '(parinfer
     lispy
-    (sayid :repo "bpiel/sayid"
-           :fetcher github
-           :files ("sayid/src/*.el"))))
+    (sayid :location (recipe :repo "bpiel/sayid"
+                             :fetcher github
+                             :files ("src/el/*.el")))))
 
 (defun my-clojure/init-sayid ())
 
