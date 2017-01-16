@@ -1,14 +1,19 @@
 (defconst my-clojure-packages
   '(parinfer
     lispy
+    flycheck-clojure
     (sayid :location (recipe :repo "bpiel/sayid"
                              :fetcher github
                              :files ("src/el/*.el")))))
 
-
 (defun my-clojure/init-sayid ())
 
 (defun my-clojure/init-lispy ())
+
+(defun my-clojure/init-flycheck-clojure ()
+  (use-package flycheck-clojure
+    :ensure t
+    :config (flycheck-clojure-setup)))
 
 (defun my-clojure/init-parinfer ()
   (use-package parinfer
