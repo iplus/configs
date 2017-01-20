@@ -13,6 +13,7 @@
 	pager = less -FXR
 	whitespace = trailing-space,space-before-tab
 	editor = emacsclient -nw -a ''
+	excludesfile = /Users/iplus/.gitignore_global
 
 [alias]
   # Branches
@@ -101,3 +102,5 @@
 	trustExitCode = true
 [pull]
 	rebase = true
+[commit]
+	template = ~/.stCommitMsg
