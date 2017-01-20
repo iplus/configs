@@ -6,13 +6,23 @@
                              :fetcher github
                              :files ("src/el/*.el")))))
 
-(defun my-clojure/init-sayid ())
+(defun my-clojure/init-sayid ()
+  (use-package sayid
+    :defer t))
 
-(defun my-clojure/init-lispy ())
+(defun my-clojure/init-lispy ()
+  (use-package lispy
+    :ensure t
+    :defer t
+    :init
+    (progn
+      (add-hook 'clojure-mode-hook #'lispy-mode)
+      (setq lispy-compat '(cider)))))
 
 (defun my-clojure/init-flycheck-clojure ()
   (use-package flycheck-clojure
     :ensure t
+    :defer t
     :config (flycheck-clojure-setup)))
 
 (defun my-clojure/init-parinfer ()
