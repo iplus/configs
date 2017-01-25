@@ -386,6 +386,16 @@ layers configuration. You are free to put any user code."
   (global-set-key (kbd "s-d") 'kill-this-buffer)
   (global-set-key (kbd "s-k") 'spacemacs/kill-other-buffers)
 
+  (defun spacemacs/cider-test-run-project-tests ()
+    (interactive)
+    (cider-load-buffer)
+    (cider-test-run-project-tests))
+
+  (defun spacemacs/cider-test-rerun-tests ()
+    (interactive)
+    (cider-load-buffer)
+    (cider-test-rerun-failed-tests))
+
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (define-key evil-visual-state-map (kbd "j") 'evil-next-visual-line)
