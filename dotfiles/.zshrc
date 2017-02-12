@@ -69,6 +69,7 @@ export LANG=en_US.UTF-8
 
 export EDITOR="emacsclient -nw -a ''"
 alias edit="emacsclient -nw -a ''"
+alias vim=edit
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
