@@ -37,7 +37,8 @@ approach like (define-key map (kbd \"M-d\") \"$\") did not work properly!"
 
 (defun my-web-dev/disable-rainbow-identifiers ()
   "Disable `rainbow-identifiers-mode'."
-  (rainbow-identifiers-mode -1))
+  ;; (rainbow-identifiers-mode -1)
+  )
 
 (defun my-web-dev/toggle-php-web-mode ()
   "Toggle between `php-mode' and `web-mode'."
