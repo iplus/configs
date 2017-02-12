@@ -1,10 +1,16 @@
 (defconst my-clojure-packages
   '(parinfer
     lispy
+    (clojure-semantic :location
+                      (recipe :repo "kototama/clojure-semantic"
+                              :fetcher github))
     flycheck-clojure
     (sayid :location (recipe :repo "bpiel/sayid"
                              :fetcher github
                              :files ("src/el/*.el")))))
+
+(defun my-clojure/init-clojure-semantic ())
+
 
 (defun my-clojure/init-sayid ()
   (use-package sayid
@@ -22,8 +28,9 @@
 (defun my-clojure/init-flycheck-clojure ()
   (use-package flycheck-clojure
     :ensure t
-    :defer t
-    :config (flycheck-clojure-setup)))
+    ;; :mode "\\.clj\\'"
+    :init
+    (progn (flycheck-clojure-setup))))
 
 (defun my-clojure/init-parinfer ()
   (use-package parinfer
