@@ -13,68 +13,64 @@ values."
    dotspacemacs-distribution 'spacemacs
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   configuration-layer-private-directory "~/.emacs.d/private/private"
+   configuration-layer-private-directory "~/.emacs.d/private/private/"
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
-     erlang
-     sql
-     nginx
-     yaml
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      better-defaults
-
      (auto-completion :variables
                       auto-completion-return-key-behavior nil
                       auto-completion-tab-key-behavior 'complete
-                      auto-completion-complete-with-key-sequence "ht"
+                      auto-completion-complete-with-key-sequence "`"
                       auto-completion-complete-with-key-sequence-delay 0.2
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-help-tooltip 'table-cell-map-hook
-                      auto-completion-enable-sort-by-usage t
-                      auto-completion-use-menu-map t
-                      )
-     dash
-     ;; org-download
-     docker
-     ;; helm
-     ivy
-     imenu-list
-     ;; unimpaired
-     ;; languages
-     ;; c-c++
-     themes-megapack
+                      auto-completion-enable-sort-by-usage nil
+                      auto-completion-use-menu-map t)
+     helm
+     ;;ivy
+
+     org
+     latex
+     (markdown :variables markdown-live-preview-engine 'vmd)
      (clojure :variables
               clojure-enable-fancify-symbols t)
      my-clojure
      emacs-lisp
      java
-     javascript
-     ;; python
-     fasd
-     ;; markup
+     php
+     semanticphp
      html
-     latex
-     (markdown :variables markdown-live-preview-engine 'vmd)
-     org
+     javascript
+     react
+     (my-web-dev :variables
+                 my-web-dev-php-fill-column 120)
+     sql
+     yaml
+
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
             shell-default-shell 'eshell)
-
+     (syntax-checking :variables syntax-checking-enable-by-default t)
+     ;;(restclient :variables restclient-use-org t)
+     semantic
+     gtags
      version-control
      git
      github
+     dash
+     imenu-list
+     docker
 
-     javascript
-     react
-     php
+     fasd
      (ibuffer :variables ibuffer-group-buffers-by nil)
      bb-ibuffer
      bb-org
@@ -84,32 +80,23 @@ values."
      bb-latex
      ;; w3m
      ;; ranger
-     semantic
-     semanticphp
-     typography
+
      search-engine
      no-dots
      (evil-snipe :variables evil-snipe-enable-alternate-f-and-t-behaviors t)
-     gtags
-     (syntax-checking :variables syntax-checking-enable-by-default t)
-     (restclient :variables restclient-use-org t)
-     yaml
-     (my-web-dev :variables
-                 my-web-dev-php-fill-column 120)
+     typography
      (spell-checking :variables
                      spell-checking-enable-auto-dictionary t
                      spell-checking-enable-by-default nil
                      ispell-program-name "/usr/local/bin/aspell")
+     themes-megapack
+     osx)
 
-     osx
-     )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(defproject
-                                      powerline
-                                      org-projectile)
+   dotspacemacs-additional-packages '(defproject powerline org-projectile button-lock fixmee)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    dotspacemacs-download-packages 'used
@@ -166,18 +153,13 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(leuven
+   dotspacemacs-themes '(minimal-light
+                         solarized-light
+                         zenburn
+                         leuven
                          sanityinc-tomorrow-day
                          monokai
-                         material
-                         sanityinc-solarized-light
-                         spacemacs-light
-                         zenburn
-                         solarized-light
-                         tao-yin
-                         wombat
-                         solarized-dark
-                         spacemacs-dark)
+                         spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -242,7 +224,7 @@ values."
    dotspacemacs-helm-resize t
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
-   dotspacemacs-helm-no-header nil
+   dotspacemacs-helm-no-header t
    dotspacemacs-helm-use-fuzzy 'always
    ;; define the position to display `helm', options are `bottom', `top',
    ;; `left', or `right'. (default 'bottom)
@@ -343,11 +325,11 @@ in `dotspacemacs/user-config'."
   (setq browse-url-browser-function 'browse-url-generic
         engine/browser-function 'browse-url-generic
         browse-url-generic-program "/Applications/qutebrowser.app/Contents/MacOS/qutebrowser")
-  ;; (setq browse-url-browser-function 'eww-browse-url
+  ;;(setq browse-url-browser-function 'eww-browse-url
   ;;       engine/browser-function 'eww-browse-url)
-  (custom-set-variables
-   '(eclim-eclipse-dirs '("/Applications/Eclipse.app/Contents/Eclipse"))
-   '(eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim"))
+  ;;(custom-set-variables
+  ;; '(eclim-eclipse-dirs '("/Applications/Eclipse.app/Contents/Eclipse"))
+  ;; '(eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim"))
 
   (setq-default
    ;; Whitespace mode
@@ -364,7 +346,7 @@ in `dotspacemacs/user-config'."
 
    global-auto-highlight-symbol-mode t
 
-   shell-default-term-shell "/bin/zsh"
+   ;; shell-default-term-shell "/bin/zsh"
    ;; Ranger
    ;; ranger-override-dired t
    ;; ranger-parent-depth 2
@@ -379,12 +361,28 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   ;; (global-company-mode)
+  (use-package fixmee
+    :init
+    (progn
+      (global-button-lock-mode 1)
+      (global-fixmee-mode 1)
+      (spacemacs/set-leader-keys "et" 'fixmee-view-listing)))
+
   (add-to-list 'auto-mode-alist '("\\.volt\\'" . web-mode))
   (global-auto-revert-mode t)
   (setq-default
    ranger-cleanup-eagerly t)
   (global-set-key (kbd "s-d") 'kill-this-buffer)
   (global-set-key (kbd "s-k") 'spacemacs/kill-other-buffers)
+  (global-set-key (kbd "`") 'yas-expand)
+
+  ;; (setq cider-cljs-lein-repl
+  ;;       "(do (require 'figwheel-sidecar.repl-api)
+  ;;          (figwheel-sidecar.repl-api/start-figwheel!)
+  ;;          (figwheel-sidecar.repl-api/cljs-repl))")
+
+  (setq eclim-eclipse-dirs "/Applications/Eclipse.app/Contents/Eclipse"
+        eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
 
   (defun spacemacs/cider-test-run-project-tests ()
     (interactive)
@@ -408,8 +406,9 @@ layers configuration. You are free to put any user code."
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line-text)
   (define-key evil-insert-state-map (kbd "C-h") 'delete-backward-char)
-  ;; (define-key evil-insert-state-map (kbd "TAB") 'yas-expand)
-  ;; (set-face-attribute 'region nil :background "#666")
+  (define-key evil-insert-state-map (kbd "TAB") 'yas-expand)
+  (set-face-background 'hl-line "white")
+  (set-face-attribute hl-line-face nil :box "orange")
   ;; (evil-define-key 'insert (kbd "C-c") 'evil-normal-state)
   ;; (define-key evil-insert-state-map (kbd "k") 'evil-previous-visual-line)
   (evil-leader/set-key
@@ -524,56 +523,25 @@ layers configuration. You are free to put any user code."
   ;; (spacemacs/toggle-golden-ratio-on)
   )
 
-;; (when (file-exists-p "~/local.el")
-;;   (load "~/local.el"))
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(eclim-eclipse-dirs (quote ("/Applications/Eclipse.app/Contents/Eclipse")))
- '(eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
- '(package-selected-packages
-   (quote
-    (org counsel with-editor js2-mode flycheck-clojure eclim autothemer magit auctex ws-butler winum tao-theme sayid org-download neotree moe-theme lispy jazz-theme info+ eshell-z counsel-projectile cider company flycheck helm helm-core git-commit ivy zoutline zonokai-theme zenburn-theme zen-and-art-theme yaml-mode xterm-color which-key wgrep web-mode web-beautify volatile-highlights vmd-mode vi-tilde-fringe uuidgen use-package unfill underwater-theme ujelly-theme typo twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toc-org tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stickyfunc-enhance srefactor sql-indent spacemacs-theme spaceline spacegray-theme sourcerer-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slim-mode shell-pop seti-theme semantic-php scss-mode sass-mode reverse-theme reveal-in-osx-finder restart-emacs request rainbow-delimiters railscasts-theme queue quelpa purple-haze-theme pug-mode professional-theme popwin planet-theme phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el pbcopy pastels-on-dark-theme parinfer paradox osx-trash osx-dictionary origami orgit organic-green-theme org-projectile org-present org-pomodoro org-plus-contrib org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme ob-restclient ob-http noctilux-theme niflheim-theme nginx-mode naquadah-theme mwim mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow magit-gh-pulls macrostep lush-theme lorem-ipsum livid-mode linum-relative link-hint light-soap-theme less-css-mode launchctl js2-refactor js-doc jbeans-theme ivy-purpose ivy-hydra ir-black-theme inkpot-theme indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt heroku-theme hemisu-theme help-fns+ helm-make hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md ggtags gandalf-theme flyspell-correct-ivy flycheck-pos-tip flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator fasd farmhouse-theme fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu espresso-theme eshell-prompt-extras esh-help erlang engine-mode emmet-mode elisp-slime-nav dumb-jump drupal-mode dracula-theme dockerfile-mode docker django-theme diff-hl defproject dash-at-point darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme counsel-dash company-web company-tern company-statistics company-restclient company-quickhelp company-emacs-eclim company-auctex column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode clues-theme clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ac-ispell)))
- '(safe-local-variable-values
-   (quote
-    ((phpunit-configuration-file . "tests/phpunit_full_without_api.xml")))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(font-latex-sectioning-0-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-1-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-2-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-3-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-4-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-5-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-slide-title-face ((t (:inherit default :height 1.0 :weight bold))))
- '(info-title-1 ((t (:inherit default :height 1.0 :weight bold))))
- '(info-title-2 ((t (:inherit default :height 1.0 :weight bold))))
- '(info-title-3 ((t (:inherit default :height 1.0 :weight bold))))
- '(info-title-4 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-1 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-2 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-3 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-4 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-5 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-6 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-document-title ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-1 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-2 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-3 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-4 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-5 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-6 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-7 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-8 ((t (:inherit default :height 1.0 :weight bold)))))
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(eclim-eclipse-dirs (quote ("/Applications/Eclipse.app/Contents/Eclipse")) t)
+   '(eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim" t)
+   '(package-selected-packages
+     (quote
+      (clojure-semantic nav fixmee string-utils back-button button-lock ucs-utils smartrep nav-flash persistent-soft list-utils madhat2r-theme solarized-theme helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-gtags helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag flyspell-correct-helm ace-jump-helm-line powerline alert log4e gntp markdown-mode skewer-mode simple-httpd window-purpose imenu-list parent-mode haml-mode fringe-helper git-gutter+ git-gutter gh marshal logito pcache ht flyspell-correct flx smartparens iedit anzu evil goto-chg undo-tree json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diminish projectile helm-dash swiper web-completion-data dash-functional tern restclient know-your-http-well pos-tip hydra inflections edn multiple-cursors paredit peg eval-sexp-fu highlight seq spinner pkg-info clojure-mode epl bind-map bind-key yasnippet packed async avy auto-complete popup php-mode f s dash org counsel with-editor js2-mode flycheck-clojure eclim autothemer magit auctex ws-butler winum tao-theme sayid org-download neotree moe-theme lispy jazz-theme info+ eshell-z counsel-projectile cider company flycheck helm helm-core git-commit ivy zoutline zonokai-theme zenburn-theme zen-and-art-theme yaml-mode xterm-color which-key wgrep web-mode web-beautify volatile-highlights vmd-mode vi-tilde-fringe uuidgen use-package unfill underwater-theme ujelly-theme typo twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toc-org tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stickyfunc-enhance srefactor sql-indent spacemacs-theme spaceline spacegray-theme sourcerer-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smex smeargle slim-mode shell-pop seti-theme semantic-php scss-mode sass-mode reverse-theme reveal-in-osx-finder restart-emacs request rainbow-delimiters railscasts-theme queue quelpa purple-haze-theme pug-mode professional-theme popwin planet-theme phpunit phpcbf php-refactor-mode php-extras php-auto-yasnippets phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el pbcopy pastels-on-dark-theme parinfer paradox osx-trash osx-dictionary origami orgit organic-green-theme org-projectile org-present org-pomodoro org-plus-contrib org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme ob-restclient ob-http noctilux-theme niflheim-theme nginx-mode naquadah-theme mwim mustang-theme multi-term move-text monokai-theme monochrome-theme molokai-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-gitflow magit-gh-pulls macrostep lush-theme lorem-ipsum livid-mode linum-relative link-hint light-soap-theme less-css-mode launchctl js2-refactor js-doc jbeans-theme ivy-purpose ivy-hydra ir-black-theme inkpot-theme indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt heroku-theme hemisu-theme help-fns+ helm-make hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md ggtags gandalf-theme flyspell-correct-ivy flycheck-pos-tip flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator fasd farmhouse-theme fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu espresso-theme eshell-prompt-extras esh-help erlang engine-mode emmet-mode elisp-slime-nav dumb-jump drupal-mode dracula-theme dockerfile-mode docker django-theme diff-hl defproject dash-at-point darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme counsel-dash company-web company-tern company-statistics company-restclient company-quickhelp company-emacs-eclim company-auctex column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode clues-theme clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ac-ispell)))
+   '(safe-local-variable-values
+     (quote
+      ((TeX-engine . pdflatex)
+       (TeX-command-extra-options . "-shell-escape")
+       (mangle-whitespace . t)
+       (phpunit-configuration-file . "tests/phpunit_full_without_api.xml")))))
+  )
